@@ -28,7 +28,8 @@ while True:
     connection = "Connection: close"
     content = "Hello!"
 
-    header = "\r\n".join((response_status,content_type,content_len,connection,content)) + "\r\n" + "\r\n" 
+    header = "\r\n".join((response_status,content_type,content_len,connection)) 
+    header += "\r\n" "\r\n" + content + "\r\n" + "\r\n"
     encoded_header = header.encode("ISO-8859-1") 
     new_socket.sendall(encoded_header)
     new_socket.close()
