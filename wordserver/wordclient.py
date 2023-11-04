@@ -3,6 +3,7 @@ import socket
 
 # How many bytes is the word length?
 WORD_LEN_SIZE = 2
+PACKET_SIZE = 3
 
 def usage():
     print("usage: wordclient.py server port", file=sys.stderr)
@@ -21,9 +22,25 @@ def get_next_word_packet(s):
     """
 
     global packet_buffer
+    
+    
+    return_packet = None
+    while True:
+        packet_buffer += s.recv(PACKET_SIZE)
+        if len(packet_buffer) == 0: return None
 
-    # TODO -- Write me!
+        if len(packet_buffer) < 2: 
+            continue
 
+        next_packet_len = int.from_bytes(packet_buffer[0:2]) + 2
+
+        if len(packet_buffer[2:]) < next_packet_len - 2:
+            continue
+        
+        return_packet = packet_buffer[0:next_packet_len]
+        packet_buffer = packet_buffer[next_packet_len:]
+        return return_packet
+    
 
 def extract_word(word_packet):
     """
@@ -34,8 +51,8 @@ def extract_word(word_packet):
 
     Returns the word decoded as a string.
     """
-
-    # TODO -- Write me!
+    word_packet_decoded = word_packet.decode("ISO-8859-1")
+    return word_packet_decoded[2:]
 
 # Do not modify:
 
