@@ -22,8 +22,7 @@ def construct_pseudo_header(source_ip:str, destination_ip:str, tcp_length:int) -
     destination_ip_bytes = ip_to_bytes(destination_ip)
     zero = b'\x00'
     protocol = b'\x06'
-    bytes_needed = (tcp_length.bit_length() + 7) // 8
-    return source_ip_bytes + destination_ip_bytes + zero + protocol + tcp_length.to_bytes(bytes_needed, 'big')
+    return source_ip_bytes + destination_ip_bytes + zero + protocol + tcp_length.to_bytes(2, 'big')
 
 def checksum(psuedo_header: bytes, tcp_zero_cksum: bytes)-> int:
     if len(tcp_zero_cksum) % 2 == 1:
