@@ -1,7 +1,7 @@
 import sys
 import json
 
-def ipv4_to_value(ipv4_addr):
+def ipv4_to_value(ipv4_addr) -> int:
     """
     Convert a dots-and-numbers IP address to a single 32-bit numeric
     value of integer type. Returns an integer type.
@@ -14,9 +14,12 @@ def ipv4_to_value(ipv4_addr):
     ipv4_addr: "1.2.3.4"
     return:    16909060  (Which is 0x01020304 hex)
     """
-
-    # TODO -- write me!
-    pass
+    ipv4_byte_array = [int(b) for b in ipv4_addr.split('.')]
+    int_rep = 0
+    for i, byte in enumerate(ipv4_byte_array):
+       int_rep += byte << (24 - 8*i)
+    
+    return int_rep
 
 def value_to_ipv4(addr):
     """
@@ -147,16 +150,25 @@ def find_router_for_ip(routers, ip):
 
 # Uncomment this code to have it run instead of the real main.
 # Be sure to comment it back out before you submit!
-"""
 def my_tests():
     print("-------------------------------------")
     print("This is the result of my custom tests")
     print("-------------------------------------")
 
-    print(x)
-
+    
     # Add custom test code here
-"""
+
+    print("Test: ipv4_to_value")
+    inputs = ["255.255.0.0", "1.2.3.4","198.51.100.10"]
+    outputs = [4294901760,16909060,3325256714]
+
+    for input, output in zip(inputs,outputs):
+        if ipv4_to_value(input) == output:
+            print("Passed!")
+        else:
+            print("Failed!")
+            print(f"expected: {output}, received: {ipv4_to_value(input)}")
+
 
 ## -------------------------------------------
 ## Do not modify below this line
