@@ -163,11 +163,24 @@ def my_tests():
     outputs = [4294901760,16909060,3325256714]
 
     for input, output in zip(inputs,outputs):
-        if ipv4_to_value(input) == output:
+        res = ipv4_to_value(input)
+        if  res == output:
             print("Passed!")
         else:
             print("Failed!")
-            print(f"expected: {output}, received: {ipv4_to_value(input)}")
+            print(f"expected: {output}, received: {res}")
+
+    print("Test: value_to_ipv4")
+    inputs = [4294901760,16909060,3325256714]
+    ouputs = ["255.255.0.0", "1.2.3.4","198.51.100.10"]
+
+    for input, output in zip(inputs,outputs):
+            res = value_to_ipv4(input)
+            if  res == output:
+                print("Passed!")
+            else:
+                print("Failed!")
+                print(f"expected: {output}, received: {res}")
 
 
 ## -------------------------------------------
