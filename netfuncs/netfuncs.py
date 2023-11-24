@@ -21,7 +21,7 @@ def ipv4_to_value(ipv4_addr) -> int:
     
     return int_rep
 
-def value_to_ipv4(addr):
+def value_to_ipv4(addr) -> str:
     """
     Convert a single 32-bit numeric value of integer type to a
     dots-and-numbers IP address. Returns a string type.
@@ -36,10 +36,14 @@ def value_to_ipv4(addr):
     addr:   0x01020304 0b00000001000000100000001100000100 16909060
     return: "1.2.3.4"
     """
+    ipv4_byte_array = []
+    for i in range(24,-1,-8):
+        byte = (addr >> i) & 0xff
+        ipv4_byte_array.append(str(byte))
+    
+    return '.'.join(ipv4_byte_array)
 
-    # TODO -- write me!
-    pass
-
+    
 def get_subnet_mask_value(slash):
     """
     Given a subnet mask in slash notation, return the value of the mask
@@ -172,7 +176,7 @@ def my_tests():
 
     print("Test: value_to_ipv4")
     inputs = [4294901760,16909060,3325256714]
-    ouputs = ["255.255.0.0", "1.2.3.4","198.51.100.10"]
+    outputs = ["255.255.0.0", "1.2.3.4","198.51.100.10"]
 
     for input, output in zip(inputs,outputs):
             res = value_to_ipv4(input)
