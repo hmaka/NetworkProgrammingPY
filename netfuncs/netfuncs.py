@@ -62,7 +62,8 @@ def get_subnet_mask_value(slash) -> int:
     slash:  "10.20.30.40/23"
     return: 0xfffffe00 0b11111111111111111111111000000000 4294966784
     """
-
+    number_of_ones = int(slash.split('/')[-1])
+    return ((1 << number_of_ones) - 1) << (32 - number_of_ones) 
     
 
 def ips_same_subnet(ip1, ip2, slash):
