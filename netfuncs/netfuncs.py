@@ -1,6 +1,7 @@
 import sys
 import json
 
+
 def ipv4_to_value(ipv4_addr) -> int:
     """
     Convert a dots-and-numbers IP address to a single 32-bit numeric
@@ -17,9 +18,10 @@ def ipv4_to_value(ipv4_addr) -> int:
     ipv4_byte_array = [int(b) for b in ipv4_addr.split('.')]
     int_rep = 0
     for i, byte in enumerate(ipv4_byte_array):
-       int_rep += byte << (24 - 8*i)
-    
+        int_rep += byte << (24 - 8*i)
+
     return int_rep
+
 
 def value_to_ipv4(addr) -> str:
     """
@@ -37,13 +39,13 @@ def value_to_ipv4(addr) -> str:
     return: "1.2.3.4"
     """
     ipv4_byte_array = []
-    for i in range(24,-1,-8):
+    for i in range(24, -1, -8):
         byte = (addr >> i) & 0xff
         ipv4_byte_array.append(str(byte))
-    
+
     return '.'.join(ipv4_byte_array)
 
-    
+
 def get_subnet_mask_value(slash) -> int:
     """
     Given a subnet mask in slash notation, return the value of the mask
@@ -63,8 +65,8 @@ def get_subnet_mask_value(slash) -> int:
     return: 0xfffffe00 0b11111111111111111111111000000000 4294966784
     """
     number_of_ones = int(slash.split('/')[-1])
-    return ((1 << number_of_ones) - 1) << (32 - number_of_ones) 
-    
+    return ((1 << number_of_ones) - 1) << (32 - number_of_ones)
+
 
 def ips_same_subnet(ip1, ip2, slash):
     """
@@ -86,7 +88,7 @@ def ips_same_subnet(ip1, ip2, slash):
     ip2:    "10.23.121.225"
     slash:  "/23"
     return: True
-    
+
     ip1:    "10.23.230.22"
     ip2:    "10.24.121.225"
     slash:  "/16"
@@ -98,6 +100,7 @@ def ips_same_subnet(ip1, ip2, slash):
 
     return sub_net_value & ip2_val == sub_net_value & ip1_val
 
+
 def get_network(ip_value, netmask):
     """
     Return the network portion of an address value as integer type.
@@ -108,9 +111,8 @@ def get_network(ip_value, netmask):
     netmask:  0xffffff00
     return:   0x01020300
     """
+    return ip_value & netmask
 
-    # TODO -- write me!
-    pass
 
 def find_router_for_ip(routers, ip):
     """
@@ -156,19 +158,21 @@ def find_router_for_ip(routers, ip):
 
 # Uncomment this code to have it run instead of the real main.
 # Be sure to comment it back out before you submit!
+
+
 def my_tests():
     print("-------------------------------------")
     print("This is the result of my custom tests")
     print("-------------------------------------")
 
     def test_runner(inputs, outputs, fn):
-        for input, output in zip(inputs,outputs):
-                    res = fn(*input)
-                    if  res == output:
-                        print("Passed!")
-                    else:
-                        print("Failed!")
-                        print(f"expected: {output}, received: {res}")
+        for input, output in zip(inputs, outputs):
+            res = fn(*input)
+            if res == output:
+                print("Passed!")
+            else:
+                print("Failed!")
+                print(f"expected: {output}, received: {res}")
 
     def tupify(iter):
         return [[x] for x in iter]
@@ -176,39 +180,70 @@ def my_tests():
     # Add custom test code here
 
     print("Test: ipv4_to_value")
-    inputs = ["255.255.0.0", "1.2.3.4","198.51.100.10"]
-    outputs = [4294901760,16909060,3325256714]
+    inputs = ["255.255.0.0", "1.2.3.4", "198.51.100.10"]
+    outputs = [4294901760, 16909060, 3325256714]
     test_runner(tupify(inputs), outputs, ipv4_to_value)
 
     print("Test: value_to_ipv4")
-    inputs = [4294901760,16909060,3325256714]
-    outputs = ["255.255.0.0", "1.2.3.4","198.51.100.10"]
-    test_runner(tupify(inputs), outputs , value_to_ipv4)
+    inputs = [4294901760, 16909060, 3325256714]
+    outputs = ["255.255.0.0", "1.2.3.4", "198.51.100.10"]
+    test_runner(tupify(inputs), outputs, value_to_ipv4)
 
     print("Test: get_subnet_mask_value")
     inputs = ["/16", "10.20.30.40/23"]
-    outputs = [4294901760,4294966784]
+    outputs = [4294901760, 4294966784]
     test_runner(tupify(inputs), outputs, get_subnet_mask_value)
 
     print("Test: ips_same_subnet")
-    inputs = [("10.23.121.17","10.23.121.225","/23"),("10.23.230.22","10.24.121.225","/16"
-)]
+    inputs = [("10.23.121.17", "10.23.121.225", "/23"), ("10.23.230.22", "10.24.121.225", "/16"
+                                                         )]
     outputs = [True, False]
     test_runner(inputs, outputs, ips_same_subnet)
-## -------------------------------------------
-## Do not modify below this line
+
+    print("Test: get_network")
+    inputs = [(0x01020304, 0xffffff00)]
+    outputs = [0x01020300]
+    test_runner(inputs, outputs, get_network)
+
+    print("Test: find_router_for_ip")
+    inputs = [
+        ({
+            "1.2.3.1": {
+                "netmask": "/24"
+            },
+            "1.2.4.1": {
+                "netmask": "/24"
+            }
+        },
+            "1.2.3.5"),
+        ({
+            "1.2.3.1": {
+                "netmask": "/24"
+            },
+            "1.2.4.1": {
+                "netmask": "/24"
+            }
+        }, "1.2.5.6")
+    ]
+    outputs = ["1.2.3.1", None]
+    test_runner(inputs, outputs, find_router_for_ip)
+# -------------------------------------------
+# Do not modify below this line
 ##
-## But do read it so you know what it's doing!
-## -------------------------------------------
+# But do read it so you know what it's doing!
+# -------------------------------------------
+
 
 def usage():
     print("usage: netfuncs.py infile.json", file=sys.stderr)
 
+
 def read_routers(file_name):
     with open(file_name) as fp:
         json_data = fp.read()
-        
+
     return json.loads(json_data)
+
 
 def print_routers(routers):
     print("Routers:")
@@ -227,8 +262,9 @@ def print_routers(routers):
         network_value = get_network(router_ip_value, netmask_value)
         network_ip = value_to_ipv4(network_value)
 
-        print(f" {router_ip:>15s}: netmask {netmask}: " \
-            f"network {network_ip}")
+        print(f" {router_ip:>15s}: netmask {netmask}: "
+              f"network {network_ip}")
+
 
 def print_same_subnets(src_dest_pairs):
     print("IP Pairs:")
@@ -243,6 +279,7 @@ def print_same_subnets(src_dest_pairs):
         else:
             print("different subnets")
 
+
 def print_ip_routers(routers, src_dest_pairs):
     print("Routers and corresponding IPs:")
 
@@ -252,7 +289,7 @@ def print_ip_routers(routers, src_dest_pairs):
 
     for ip in all_ips:
         router = str(find_router_for_ip(routers, ip))
-        
+
         if router not in router_host_map:
             router_host_map[router] = []
 
@@ -260,6 +297,7 @@ def print_ip_routers(routers, src_dest_pairs):
 
     for router_ip in sorted(router_host_map.keys()):
         print(f" {router_ip:>15s}: {router_host_map[router_ip]}")
+
 
 def main(argv):
     if "my_tests" in globals() and callable(my_tests):
@@ -283,6 +321,6 @@ def main(argv):
     print()
     print_ip_routers(routers, src_dest_pairs)
 
+
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
-    
