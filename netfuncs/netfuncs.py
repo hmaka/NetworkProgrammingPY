@@ -161,30 +161,37 @@ def my_tests():
 
     def test_runner(inputs, outputs, fn):
         for input, output in zip(inputs,outputs):
-                    res = fn(input)
+                    res = fn(*input)
                     if  res == output:
                         print("Passed!")
                     else:
                         print("Failed!")
                         print(f"expected: {output}, received: {res}")
 
+    def tupify(iter):
+        return [[x] for x in iter]
 
     # Add custom test code here
 
     print("Test: ipv4_to_value")
     inputs = ["255.255.0.0", "1.2.3.4","198.51.100.10"]
     outputs = [4294901760,16909060,3325256714]
-    test_runner(inputs, outputs, ipv4_to_value)
+    test_runner(tupify(inputs), outputs, ipv4_to_value)
 
     print("Test: value_to_ipv4")
     inputs = [4294901760,16909060,3325256714]
     outputs = ["255.255.0.0", "1.2.3.4","198.51.100.10"]
-    test_runner(inputs, outputs , value_to_ipv4)
+    test_runner(tupify(inputs), outputs , value_to_ipv4)
 
     print("Test: get_subnet_mask_value")
     inputs = ["/16", "10.20.30.40/23"]
     outputs = [4294901760,4294966784]
-    test_runner(inputs, outputs, get_subnet_mask_value)
+    test_runner(tupify(inputs), outputs, get_subnet_mask_value)
+
+    print("Test: ips_same_subnet")
+    inputs = [("10.23.121.17",)]
+    outputs = []
+    #test_runner(inputs, outputs, ips_same_subnet)
 ## -------------------------------------------
 ## Do not modify below this line
 ##
