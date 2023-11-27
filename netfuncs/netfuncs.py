@@ -44,7 +44,7 @@ def value_to_ipv4(addr) -> str:
     return '.'.join(ipv4_byte_array)
 
     
-def get_subnet_mask_value(slash):
+def get_subnet_mask_value(slash) -> int:
     """
     Given a subnet mask in slash notation, return the value of the mask
     as a single number of integer type. The input can contain an IP
@@ -63,8 +63,7 @@ def get_subnet_mask_value(slash):
     return: 0xfffffe00 0b11111111111111111111111000000000 4294966784
     """
 
-    # TODO -- write me!
-    pass
+    
 
 def ips_same_subnet(ip1, ip2, slash):
     """
@@ -159,34 +158,32 @@ def my_tests():
     print("This is the result of my custom tests")
     print("-------------------------------------")
 
-    
+    def test_runner(inputs, outputs, fn):
+        for input, output in zip(inputs,outputs):
+                    res = fn(input)
+                    if  res == output:
+                        print("Passed!")
+                    else:
+                        print("Failed!")
+                        print(f"expected: {output}, received: {res}")
+
+
     # Add custom test code here
 
     print("Test: ipv4_to_value")
     inputs = ["255.255.0.0", "1.2.3.4","198.51.100.10"]
     outputs = [4294901760,16909060,3325256714]
-
-    for input, output in zip(inputs,outputs):
-        res = ipv4_to_value(input)
-        if  res == output:
-            print("Passed!")
-        else:
-            print("Failed!")
-            print(f"expected: {output}, received: {res}")
+    test_runner(inputs, outputs, ipv4_to_value)
 
     print("Test: value_to_ipv4")
     inputs = [4294901760,16909060,3325256714]
     outputs = ["255.255.0.0", "1.2.3.4","198.51.100.10"]
+    test_runner(inputs, outputs , value_to_ipv4)
 
-    for input, output in zip(inputs,outputs):
-            res = value_to_ipv4(input)
-            if  res == output:
-                print("Passed!")
-            else:
-                print("Failed!")
-                print(f"expected: {output}, received: {res}")
-
-
+    print("Test: get_subnet_mask_value")
+    inputs = ["/16", "10.20.30.40/23"]
+    outputs = [4294901760,4294966784]
+    test_runner(inputs, outputs, get_subnet_mask_value)
 ## -------------------------------------------
 ## Do not modify below this line
 ##
